@@ -1,0 +1,18 @@
+title: GNU C++ compiler
+name: g++
+filename: source.cpp
+build-limits:
+  time: 6000
+build:
+  - argv:
+      - g++
+      - $(Run.SourceFilePath)
+      - -o
+      - $(Run.BinaryFilePath)
+      - -std=c++17
+      - -Wextra
+      - -Wpedantic
+      - -DONLINE_JUDGE
+run:
+  argv:
+    - $(Run.BinaryFilePath)

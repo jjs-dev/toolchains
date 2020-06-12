@@ -1,0 +1,13 @@
+title: CPython v3
+name: python3
+filename: source.py
+
+build:
+  - argv:
+    - cp
+    - $(Run.SourceFilePath)
+    - $(Run.BinaryFilePath)
+run:
+  argv:
+    - python3
+    - $(Run.BinaryFilePath)

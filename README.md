@@ -13,3 +13,4 @@ It is recommended to pass `--only=$TOOLCHAIN_NAME` to get feedback faster.
 ## Guidelines
  - All images should be based on `debian:slim`
  - All toolchain should somehow pass ONLINE_JUDGE option to compiled/executed program.
+ - Each image should have `io.jjs.toolchain.name` label with toolchain name.

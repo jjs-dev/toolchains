@@ -1,8 +1,8 @@
 name: Build toolchains
 
 on:
-  push:
-    branches: 
+  push: 
+    branches:
       - master
   pull_request: {}
 
@@ -11,18 +11,10 @@ env:
 
 jobs:
   build-and-push:
-    name: Build and optionally Publish
+    name: Build
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Build images
         run: |
-          ./build.py --tag-template $IMAGE_TAG_TEMPLATE --write-tags push.txt --container-manager docker
-      - if: github.event_name == 'push'
-        name: Log into repository
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u jjs-dev --password-stdin
-      - if: github.event_name == 'push'
-        name: Push images
-        run: |
-          cat push.txt
-          cat push.txt | xargs -n 1 docker push
+          ./build.py --tag-template $IMAGE_TAG_TEMPLATE --container-manager docker

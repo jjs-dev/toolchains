@@ -5,7 +5,7 @@ build-limits:
   time: 6000
 build:
   - argv:
-      - gcc
+      - /usr/bin/gcc
       - $(Run.SourceFilePath)
       - -o
       - $(Run.BinaryFilePath)

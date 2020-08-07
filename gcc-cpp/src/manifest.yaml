@@ -5,7 +5,7 @@ build-limits:
   time: 6000
 build:
   - argv:
-      - g++
+      - /usr/bin/g++
       - $(Run.SourceFilePath)
       - -o
       - $(Run.BinaryFilePath)

@@ -14,7 +14,7 @@ except FileNotFoundError:
 
 def list_all_toolchains() -> typing.List[str]:
     l = os.listdir(".")
-    return [item for item in l if item != "." and item != ".." and (not item.startswith(".")) and os.path.isdir(item)]
+    return [item for item in l if item != "." and item != ".." and item != "ci" and (not item.startswith(".")) and os.path.isdir(item)]
 
 
 def calc_selected_toolchains(whitelist: typing.Optional[typing.List[str]]) -> typing.List[str]:
@@ -33,7 +33,7 @@ def calc_selected_toolchains(whitelist: typing.Optional[typing.List[str]]) -> ty
 
 def build_toolchain(toolchain_name: str, tag: typing.Optional[str], container_manager=None):
     if container_manager is None:
-        container_manager = "podman"
+        container_manager = "docker"
     args = [container_manager, "build", "-f",
             f"{toolchain_name}/Dockerfile", f"{toolchain_name}/src"]
     if tag is not None:
@@ -51,7 +51,7 @@ arg_parser.add_argument(
     "--write-tags", help="All tags will be printend to specified file"
 )
 arg_parser.add_argument(
-    "--container-manager", help="Container manager to use instead of podman"
+    "--container-manager", help="Container manager to use instead of docker"
 )
 args = arg_parser.parse_args()
 

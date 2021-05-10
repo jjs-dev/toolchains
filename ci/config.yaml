@@ -1,0 +1,7 @@
+codegen: true
+noE2e: true
+dockerImages:
+  - toolchain-gcc
+  - toolchain-python3
+  - toolchain-gcc-cpp
+buildTimeoutMinutes: 10

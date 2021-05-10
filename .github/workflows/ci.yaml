@@ -1,0 +1,21 @@
+# GENERATED FILE DO NOT EDIT
+name: ci
+"on":
+  pull_request: {}
+  push:
+    branches:
+    - staging
+    - trying
+    - master
+jobs:
+  misspell:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 2
+    steps:
+    - name: Fetch sources
+      uses: actions/checkout@v2
+    - name: run spellcheck
+      uses: reviewdog/action-misspell@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        locale: US

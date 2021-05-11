@@ -4,6 +4,7 @@ import os
 import typing
 import argparse
 import subprocess
+import yaml
 
 try:
     open("./build.py")
@@ -14,7 +15,7 @@ except FileNotFoundError:
 
 def list_all_toolchains() -> typing.List[str]:
     l = os.listdir(".")
-    return [item for item in l if item != "." and item != ".." and item != "ci" and (not item.startswith(".")) and os.path.isdir(item)]
+    return [item for item in l if item != "." and item != ".." and (not item.startswith(".")) and os.path.isdir(item) and os.path.exists(f"{item}/Dockerfile") and os.path.exists(f"{item}/manifest.yaml")]
 
 
 def calc_selected_toolchains(whitelist: typing.Optional[typing.List[str]]) -> typing.List[str]:
@@ -31,7 +32,7 @@ def calc_selected_toolchains(whitelist: typing.Optional[typing.List[str]]) -> ty
     return whitelist
 
 
-def build_toolchain(toolchain_name: str, tag: typing.Optional[str], container_manager=None):
+def build_toolchain(toolchain_name: str, tag: typing.Optional[str], out_dir: str, container_manager=None):
     if container_manager is None:
         container_manager = "docker"
     args = [container_manager, "build", "-f",
@@ -40,7 +41,10 @@ def build_toolchain(toolchain_name: str, tag: typing.Optional[str], container_ma
         args.append("-t")
         args.append(tag)
     subprocess.check_call(args)
-
+    # let's validate that manifest is valid yaml
+    manifest = yaml.load(open(f"{toolchain_name}/manifest.yaml"), Loader=yaml.BaseLoader)
+    out = yaml.dump(manifest)
+    open(f"{out_dir}/{toolchain_name}.yaml", 'w').write(out)
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument(
@@ -49,6 +53,9 @@ arg_parser.add_argument(
     "--tag-template", help="Template that will be used to tag built images. % will be replaced by toolchain name (=directory name")
 arg_parser.add_argument(
     "--write-tags", help="All tags will be printend to specified file"
+)
+arg_parser.add_argument(
+    "--manifest-dir", default="./out", help="Directory that will contain toolchain manifests"
 )
 arg_parser.add_argument(
     "--container-manager", help="Container manager to use instead of docker"
@@ -75,4 +82,4 @@ for toolchain in selected_toolchains:
         print(f"will tag as {tag}")
         if tags_file is not None:
             print(tag, file=tags_file)
-    build_toolchain(toolchain, tag, container_manager=args.container_manager)
+    build_toolchain(toolchain, tag, args.manifest_dir, container_manager=args.container_manager)
